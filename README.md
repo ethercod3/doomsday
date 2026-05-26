@@ -7,6 +7,7 @@
 ![Windows](https://img.shields.io/badge/Windows-supported-0078D4&logo=windows&logoColor=white)
 ![macOS](https://img.shields.io/badge/macOS-supported-000000&logo=apple&logoColor=white)
 ![Linux](https://img.shields.io/badge/Linux-supported-FCC624&logo=linux&logoColor=black)
+![CI](https://img.shields.io/badge/CI-smoke%20tests-2088FF)
 ![License MIT](https://img.shields.io/badge/License-MIT-green)
 
 Набор небольших скриптов для безопасной передачи данных в условиях, где важны простота, воспроизводимость и минимальное количество зависимостей.
@@ -16,10 +17,13 @@
 | Путь | Назначение |
 | --- | --- |
 | `scripts/*.nu` | Nushell скрипты |
+| `ci/*.nu` | CI-скрипты на Nushell |
+| `.github/workflows/ci.yml` | GitHub Actions workflow для запуска smoke-теста |
+| `docker/` | Docker images проекта |
 | `tasks/*.yml` | Taskfile-задачи |
 | `Taskfile.yml` | Корневой Taskfile с include задач проекта |
 
-Файлы вроде `*.rar`, `*.zip`, `*.tar.gz` и `*.txt` не должны попадать в Git. Это сделано намеренно: в репозитории должны храниться скрипты, а не передаваемые данные, контрольные суммы или временные артефакты.
+Файлы вроде `*.rar`, `*.zip`, `*.7z`, `*.tar.gz` и `*.txt` не должны попадать в Git. Это сделано намеренно: в репозитории должны храниться скрипты, а не передаваемые данные, контрольные суммы или временные артефакты.
 
 
 <details>
@@ -184,6 +188,29 @@ task encrypt_archive:run -- input.zip output.7z "your-strong-password"
 `--` отделяет аргументы задачи от аргументов самого `task`.
 
 Контейнер монтирует корень проекта в `/workspace`, поэтому входной и выходной пути указываются относительно корня репозитория.
+
+</details>
+
+<details>
+
+<summary>CI и smoke-тесты</summary>
+
+CI собирает Docker image из `docker/encrypt_archive/Dockerfile` и запускает Nu-скрипт:
+
+```bash
+nu ci/smoke.nu
+```
+
+Smoke-тест создает временный тестовый файл, шифрует его через `scripts/encrypt_archive.nu`, проверяет файл `SHA-256`, запускает `7z t`, распаковывает архив и сравнивает распакованный payload с исходным.
+
+Локально можно запустить тот же путь, что и в GitHub Actions:
+
+```bash
+docker build --file docker/encrypt_archive/Dockerfile --tag safe-archive-ci .
+docker run --rm --entrypoint nu --volume "${PWD}:/workspace" --workdir /workspace safe-archive-ci ci/smoke.nu
+```
+
+Временные файлы создаются в `.tmp/ci-smoke`.
 
 </details>
 

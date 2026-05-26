@@ -1,4 +1,6 @@
 *.rar
 *.zip
+*.7z
 *.tar.gz
 *.txt
+.tmp/

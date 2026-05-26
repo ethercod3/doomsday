@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    name: Smoke test archive encryption
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build encrypt archive image
+        run: docker build --file docker/encrypt_archive/Dockerfile --tag safe-archive-ci .
+
+      - name: Run Nu smoke tests
+        run: |
+          docker run --rm \
+            --entrypoint nu \
+            --volume "${{ github.workspace }}:/workspace" \
+            --workdir /workspace \
+            safe-archive-ci \
+            ci/smoke.nu

@@ -1,4 +1,5 @@
 .git
+.tmp
 .gitignore
 README.md
 LICENSE
@@ -16,5 +17,7 @@ compose.yaml
 
 !scripts/
 !scripts/**
+!ci/
+!ci/**
 !docker/
 !docker/**
