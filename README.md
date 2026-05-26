@@ -10,7 +10,7 @@
 
 | Путь | Назначение |
 | --- | --- |
-| `encrypt_archive.nu` | Создает зашифрованный `7z`-архив и файл с `SHA-256`-хешем результата |
+| `scripts/encrypt_archive.nu` | Создает зашифрованный `7z`-архив и файл с `SHA-256`-хешем результата |
 | `.gitignore` | Исключает архивы и текстовые файлы с хешами из Git |
 | `README.md` | Инструкция по использованию проекта |
 
@@ -65,7 +65,7 @@ C:\Program Files\7-Zip
 Создать зашифрованный архив:
 
 ```bash
-nu encrypt_archive.nu input.zip output.7z "your-strong-password"
+nu scripts/encrypt_archive.nu input.zip output.7z "your-strong-password"
 ```
 
 Скрипт:
@@ -89,7 +89,7 @@ output.7z_2026-05-26_sha256.txt
 ## Формат команды
 
 ```bash
-nu encrypt_archive.nu <src> <dst> <key>
+nu scripts/encrypt_archive.nu <src> <dst> <key>
 ```
 
 Параметры:
@@ -103,7 +103,7 @@ nu encrypt_archive.nu <src> <dst> <key>
 Пример:
 
 ```bash
-nu encrypt_archive.nu data.zip data_encrypted.7z "correct horse battery staple"
+nu scripts/encrypt_archive.nu data.zip data_encrypted.7z "correct horse battery staple"
 ```
 
 `src` и `dst` должны быть разными файлами. Скрипт специально останавливается, если входной и выходной путь совпадают.
@@ -145,7 +145,7 @@ open output.7z --raw | hash sha256
 ## Практический порядок передачи
 
 1. Подготовьте исходный файл или архив.
-2. Создайте зашифрованный `7z` через `encrypt_archive.nu`.
+2. Создайте зашифрованный `7z` через `scripts/encrypt_archive.nu`.
 3. Проверьте тестовое открытие командой `7z t`.
 4. Передайте получателю зашифрованный архив и файл с `SHA-256`.
 5. Передайте пароль отдельно от архива, по другому каналу.
