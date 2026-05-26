@@ -7,7 +7,6 @@
 ![Windows](https://img.shields.io/badge/Windows-supported-0078D4&logo=windows&logoColor=white)
 ![macOS](https://img.shields.io/badge/macOS-supported-000000&logo=apple&logoColor=white)
 ![Linux](https://img.shields.io/badge/Linux-supported-FCC624&logo=linux&logoColor=black)
-![No data in Git](https://img.shields.io/badge/Git-no%20archives%20stored-CB2431)
 ![License MIT](https://img.shields.io/badge/License-MIT-green)
 
 Набор небольших скриптов для безопасной передачи данных в условиях, где важны простота, воспроизводимость и минимальное количество зависимостей.
