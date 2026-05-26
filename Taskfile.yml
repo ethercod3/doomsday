@@ -1,0 +1,6 @@
+version: '3'
+
+includes:
+  encrypt_archive:
+    taskfile: ./tasks/encrypt_archive.yml
+    dir: .

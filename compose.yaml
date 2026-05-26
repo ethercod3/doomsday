@@ -1,0 +1,10 @@
+services:
+  encrypt-archive:
+    profiles:
+      - archive
+    build:
+      context: .
+      dockerfile: docker/encrypt_archive/Dockerfile
+    working_dir: /workspace
+    volumes:
+      - ./:/workspace

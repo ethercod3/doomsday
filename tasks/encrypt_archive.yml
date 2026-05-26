@@ -1,0 +1,7 @@
+version: '3'
+
+tasks:
+  run:
+    desc: Encrypt an archive through the Docker Compose profile.
+    cmds:
+      - docker compose --profile archive run --rm --build encrypt-archive {{.CLI_ARGS}}
