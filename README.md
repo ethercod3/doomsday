@@ -1,4 +1,14 @@
-![Nushell](https://img.shields.io/badge/Shell-Nushell-4E9A06?style=flat-square) ![7--Zip](https://img.shields.io/badge/Archive-7--Zip-222222?style=flat-square) ![SHA--256](https://img.shields.io/badge/Integrity-SHA--256-0A66C2?style=flat-square) ![Cross platform](https://img.shields.io/badge/OS-Cross--platform-555555?style=flat-square)
+![Nushell](https://img.shields.io/badge/Shell-Nushell-4E9A06?style=flat-square)
+![7--Zip](https://img.shields.io/badge/Archive-7--Zip-222222?style=flat-square)
+![SHA--256](https://img.shields.io/badge/Integrity-SHA--256-0A66C2?style=flat-square)
+![AES--256](https://img.shields.io/badge/Encryption-AES--256-8A2BE2?style=flat-square)
+![Header encryption](https://img.shields.io/badge/Headers-Encrypted-0A66C2?style=flat-square)
+![Cross platform](https://img.shields.io/badge/OS-Cross--platform-555555?style=flat-square)
+![Windows](https://img.shields.io/badge/Windows-supported-0078D4?style=flat-square&logo=windows&logoColor=white)
+![macOS](https://img.shields.io/badge/macOS-supported-000000?style=flat-square&logo=apple&logoColor=white)
+![Linux](https://img.shields.io/badge/Linux-supported-FCC624?style=flat-square&logo=linux&logoColor=black)
+![No data in Git](https://img.shields.io/badge/Git-no%20archives%20stored-CB2431?style=flat-square)
+![License MIT](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 
 Набор небольших скриптов для безопасной передачи данных в условиях, где важны простота, воспроизводимость и минимальное количество зависимостей.
 
@@ -9,6 +19,7 @@
 | `scripts/encrypt_archive.nu` | Создает зашифрованный `7z`-архив и файл с `SHA-256`-хешем результата |
 | `.gitignore` | Исключает архивы и текстовые файлы с хешами из Git |
 | `README.md` | Инструкция по использованию проекта |
+| `LICENSE` | Условия использования проекта |
 
 Файлы вроде `*.rar`, `*.zip`, `*.tar.gz` и `*.txt` не должны попадать в Git. Это сделано намеренно: в репозитории должны храниться скрипты, а не передаваемые данные, контрольные суммы или временные артефакты.
 
