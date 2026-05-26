@@ -10,27 +10,27 @@
 ![CI](https://img.shields.io/badge/CI-smoke%20tests-2088FF)
 ![License MIT](https://img.shields.io/badge/License-MIT-green)
 
-Набор небольших скриптов для безопасной передачи данных в условиях, где важны простота, воспроизводимость и минимальное количество зависимостей.
+Small scripts for safe data transfer when simplicity, reproducibility, and a minimal dependency set matter.
 
-## Что внутри
+## What's inside
 
-| Путь | Назначение |
+| Path | Purpose |
 | --- | --- |
-| `scripts/*.nu` | Nushell скрипты |
-| `ci/*.nu` | CI-скрипты на Nushell |
-| `.github/workflows/ci.yml` | GitHub Actions workflow для запуска smoke-теста |
-| `docker/` | Docker images проекта |
-| `tasks/*.yml` | Taskfile-задачи |
-| `Taskfile.yml` | Корневой Taskfile с include задач проекта |
+| `scripts/*.nu` | Nushell scripts |
+| `ci/*.nu` | CI scripts written in Nushell |
+| `.github/workflows/ci.yml` | GitHub Actions workflow for the smoke test |
+| `docker/` | Project Docker images |
+| `tasks/*.yml` | Taskfile tasks |
+| `Taskfile.yml` | Root Taskfile with project task includes |
 
-Файлы вроде `*.rar`, `*.zip`, `*.7z`, `*.tar.gz` и `*.txt` не должны попадать в Git. Это сделано намеренно: в репозитории должны храниться скрипты, а не передаваемые данные, контрольные суммы или временные артефакты.
+Files such as `*.rar`, `*.zip`, `*.7z`, `*.tar.gz`, and `*.txt` should not be committed to Git. This is intentional: the repository should store scripts, not transferred data, checksums, or temporary artifacts.
 
 
 <details>
 
-<summary>Требования</summary>
+<summary>Requirements</summary>
 
-Нужны две команды в `PATH`:
+Two commands must be available in `PATH`:
 
 - `nu` - Nushell;
 - `7z` - 7-Zip.
@@ -59,14 +59,14 @@ sudo apt install nushell 7zip
 sudo pacman -S nushell 7zip
 ```
 
-Проверить установку:
+Check the installation:
 
 ```bash
 nu --version
 7z
 ```
 
-Если `7z` не находится, добавьте каталог установки 7-Zip в `PATH`. На Windows это обычно:
+If `7z` is not found, add the 7-Zip installation directory to `PATH`. On Windows, this is usually:
 
 ```text
 C:\Program Files\7-Zip
@@ -77,148 +77,148 @@ C:\Program Files\7-Zip
 
 <details>
 
-<summary>Быстрый старт</summary>
+<summary>Quick start</summary>
 
-Создать зашифрованный архив:
+Create an encrypted archive:
 
 ```bash
 nu scripts/encrypt_archive.nu input.zip output.7z "your-strong-password"
 ```
 
-Скрипт:
+The script:
 
-- удалит старый файл назначения, если он уже существует;
-- создаст новый архив формата `7z`;
-- включит шифрование заголовков через `-mhe=on`;
-- создаст файл контрольной суммы рядом с архивом.
+- removes the old destination file if it already exists;
+- creates a new `7z` archive;
+- enables header encryption with `-mhe=on`;
+- creates a checksum file next to the archive.
 
-Пример результата:
+Example output:
 
 ```text
 output.7z
 output.7z_2026-05-26_sha256.txt
 ```
 
-> **Важно**
+> **Important**
 >
-> Скрипт использует `7z a -t7z`, поэтому фактический формат результата - `7z`. Можно указать любое имя выходного файла, но рекомендуется расширение `.7z`, чтобы имя соответствовало содержимому.
+> The script uses `7z a -t7z`, so the actual output format is `7z`. You can use any output file name, but the `.7z` extension is recommended so the name matches the contents.
 
 </details>
 
 <details>
-<summary>Формат команды</summary>
+<summary>Command format</summary>
 
 ```bash
 nu scripts/encrypt_archive.nu <src> <dst> <key>
 ```
 
-Параметры:
+Parameters:
 
-| Параметр | Назначение |
+| Parameter | Purpose |
 | --- | --- |
-| `src` | Исходный файл или архив, который нужно защитить |
-| `dst` | Путь к выходному зашифрованному архиву |
-| `key` | Пароль шифрования |
+| `src` | Source file or archive to protect |
+| `dst` | Path to the output encrypted archive |
+| `key` | Encryption password |
 
-Пример:
+Example:
 
 ```bash
 nu scripts/encrypt_archive.nu data.zip data_encrypted.7z "correct horse battery staple"
 ```
 
-`src` и `dst` должны быть разными файлами. Скрипт специально останавливается, если входной и выходной путь совпадают.
+`src` and `dst` must be different files. The script intentionally stops if the input and output paths are the same.
 </details>
 
 
 <details>
-<summary>Проверка целостности</summary>
+<summary>Integrity check</summary>
 
-После создания архива рядом появляется файл:
+After the archive is created, a file appears next to it:
 
 ```text
-<dst>_<дата>_sha256.txt
+<dst>_<date>_sha256.txt
 ```
 
-Внутри хранится имя архива и его `SHA-256`. Этот файл нужен, чтобы получатель мог проверить, что архив не был поврежден или подменен при передаче.
+It stores the archive name and its `SHA-256` hash. This file lets the recipient verify that the archive was not damaged or replaced during transfer.
 
-Проверить хеш вручную в Nushell:
+Check the hash manually in Nushell:
 
 ```bash
 open output.7z --raw | hash sha256
 ```
 
-Сравните результат со значением в файле `output.7z_YYYY-MM-DD_sha256.txt`.
+Compare the result with the value in `output.7z_YYYY-MM-DD_sha256.txt`.
 </details>
 
 <details>
 
-<summary>Проверка расшифровки</summary>
+<summary>Decryption check</summary>
 
-Перед передачей полезно убедиться, что архив открывается с тем паролем, который вы собираетесь передать получателю:
+Before sending the archive, it is useful to confirm that it opens with the password you plan to share with the recipient:
 
 ```bash
 7z t output.7z -p"your-strong-password"
 ```
 
-Распаковать архив:
+Extract the archive:
 
 ```bash
 7z x output.7z -p"your-strong-password"
 ```
 
-Если пароль содержит пробелы или спецсимволы, оставляйте кавычки.
+If the password contains spaces or special characters, keep the quotes.
 </details>
 
 <details>
 
-<summary>Запуск через Docker</summary>
+<summary>Run with Docker</summary>
 
-Собрать и запустить контейнерную версию:
+Build and run the container version:
 
 ```bash
 docker compose --profile archive run --rm --build encrypt-archive input.zip output.7z "your-strong-password"
 ```
 
-То же самое через Task:
+The same command through Task:
 
 ```bash
 task encrypt_archive:run -- input.zip output.7z "your-strong-password"
 ```
 
-`--` отделяет аргументы задачи от аргументов самого `task`.
+`--` separates task arguments from arguments passed to `task` itself.
 
-Контейнер монтирует корень проекта в `/workspace`, поэтому входной и выходной пути указываются относительно корня репозитория.
+The container mounts the project root at `/workspace`, so input and output paths are relative to the repository root.
 
 </details>
 
 <details>
 
-<summary>CI и smoke-тесты</summary>
+<summary>CI and smoke tests</summary>
 
-CI собирает Docker image из `docker/encrypt_archive/Dockerfile` и запускает Nu-скрипт:
+CI builds the Docker image from `docker/encrypt_archive/Dockerfile` and runs the Nu script:
 
 ```bash
 nu ci/smoke.nu
 ```
 
-Smoke-тест создает временный тестовый файл, шифрует его через `scripts/encrypt_archive.nu`, проверяет файл `SHA-256`, запускает `7z t`, распаковывает архив и сравнивает распакованный payload с исходным.
+The smoke test creates a temporary test file, encrypts it with `scripts/encrypt_archive.nu`, verifies the `SHA-256` file, runs `7z t`, extracts the archive, and compares the extracted payload with the original.
 
-Локально можно запустить тот же путь, что и в GitHub Actions:
+You can run the same path locally as GitHub Actions:
 
 ```bash
 docker build --file docker/encrypt_archive/Dockerfile --tag safe-archive-ci .
 docker run --rm --entrypoint nu --volume "${PWD}:/workspace" --workdir /workspace safe-archive-ci ci/smoke.nu
 ```
 
-Временные файлы создаются в `.tmp/ci-smoke`.
+Temporary files are created in `.tmp/ci-smoke`.
 
 </details>
 
-## Практический порядок передачи
+## Practical Transfer Flow
 
-1. Подготовьте исходный файл или архив.
-2. Создайте зашифрованный `7z` через `scripts/encrypt_archive.nu`.
-3. Проверьте тестовое открытие командой `7z t`.
-4. Передайте получателю зашифрованный архив и файл с `SHA-256`.
-5. Передайте пароль отдельно от архива, по другому каналу.
-6. Попросите получателя проверить хеш перед распаковкой.
+1. Prepare the source file or archive.
+2. Create an encrypted `7z` archive with `scripts/encrypt_archive.nu`.
+3. Verify test opening with `7z t`.
+4. Send the encrypted archive and the `SHA-256` file to the recipient.
+5. Send the password separately from the archive, through another channel.
+6. Ask the recipient to verify the hash before extraction.

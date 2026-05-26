@@ -1,9 +1,9 @@
-# Создает зашифрованный 7z-архив и файл с SHA-256-хешем результата
+# Creates an encrypted 7z archive and a SHA-256 hash file for the result
 
 def main [
-src: string # Архив для шифрования
-dst: string # Имя файла архива в результате
-key: string # Ключ шифрования (пароль архива)
+src: string # Archive to encrypt
+dst: string # Output archive file name
+key: string # Encryption key (archive password)
 ] {
     if $src == $dst {
         error make { msg: "src and dst must be different files" }
